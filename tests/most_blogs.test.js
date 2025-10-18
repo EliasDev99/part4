@@ -1,9 +1,8 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
-const { mostBlogs } = require('../utils/most_blogs.js')
+const { mostBlogs, mostLikes } = require('../utils/most_blogs.js')
 
-describe('Author with the most blogs', () => {
-  const allBlogs = [
+ const allBlogs = [
   {
     _id: "5a422a851b54a676234d17f7",
     title: "React patterns",
@@ -54,11 +53,25 @@ describe('Author with the most blogs', () => {
   }  
   ]
 
+
+describe('Author with the most blogs', () => {
+
   test('The author with the highest number of blogs', () => {
     const result = mostBlogs(allBlogs)
     assert.deepStrictEqual(result, {
         author: "Robert C. Martin",
         blogs: 3
+    })
+  })
+})
+
+describe('Author with the most likes', () => {
+    
+   test('The author with the highest total likes', () => {
+    const result = mostLikes(allBlogs)
+    assert.deepStrictEqual(result, {
+        author: "Edsger W. Dijkstra",
+        likes: 17
     })
   })
 })
