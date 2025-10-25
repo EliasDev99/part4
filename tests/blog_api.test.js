@@ -34,6 +34,26 @@ test('should return blogs with id property instead of MongoDB _id', async () => 
         assert.ok(blogs.every(b => b.id))
 })
 
+test('create a new blog post and blogs in the system is increased by one', async () => {
+    const newBlog = {
+        "title": "Test POST Blog",
+        "author": "Matti",
+        "url": "https://example.com/blog1",
+        "likes": 18
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog) 
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+        
+    const response = await api
+        .get('/api/blogs')    
+
+    assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)    
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
