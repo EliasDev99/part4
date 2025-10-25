@@ -24,6 +24,16 @@ test('should return all blogs in JSON format', async () => {
         assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
+test('should return blogs with id property instead of MongoDB _id', async () => {
+    const response = await api
+        .get('/api/blogs') 
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const blogs = response.body
+        assert.ok(blogs.every(b => b.id))
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
