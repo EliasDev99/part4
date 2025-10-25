@@ -71,6 +71,32 @@ test('default likes to 0 if not provided', async () => {
 
 })
 
+test('should respond 400 if title is missing', async () => { 
+     const newBlog = {
+        "author": "Matti",
+        "url": "https://example.com/blog1",
+        "likes": 18
+    }
+
+     await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+ })
+
+ test('should respond 400 if url is missing', async () => { 
+     const newBlog = {
+         "title": "Test POST Blog",
+        "author": "Matti",
+        "likes": 18
+    }
+
+     await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+ })
+
 after(async () => {
   await mongoose.connection.close()
 })
