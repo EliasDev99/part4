@@ -14,3 +14,6 @@ Content-Type: application/json
   "url": "https://example.com/blog1",
   "likes": 10
 }
+
+### DELETE a blog by ID
+DELETE http://localhost:3003/api/blogs/68fc7188c46b75fd01adf
