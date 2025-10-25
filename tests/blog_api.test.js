@@ -112,6 +112,36 @@ test('should respond 400 if title is missing', async () => {
     })
   })
 
+   test('Updates a blog with a valid id', async () => { 
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+        
+        const updatedBlog = {
+            "title": "Updated Blog",
+            "author": "Matti",
+            "url": "https://example.com/blog1",
+            "likes": blogToUpdate.likes + 1
+         }
+
+        const response =   await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedBlog) 
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+    
+        assert.strictEqual(response.body.title, updatedBlog.title)
+        assert.strictEqual(response.body.likes, updatedBlog.likes)
+
+        // Verify DB actually updated
+        const blogsAtEnd = await helper.blogsInDb()
+        const updatedBlogData = blogsAtEnd.find(b => b.id === blogToUpdate.id)
+        assert.strictEqual(updatedBlogData.title, updatedBlogData.title)
+ })
+
+
+
+
+
 after(async () => {
   await mongoose.connection.close()
 })
