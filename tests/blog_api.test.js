@@ -47,11 +47,28 @@ test('create a new blog post and blogs in the system is increased by one', async
         .send(newBlog) 
         .expect(201)
         .expect('Content-Type', /application\/json/)
-        
+
     const response = await api
         .get('/api/blogs')    
 
     assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)    
+})
+
+test('default likes to 0 if not provided', async () => {
+    const newBlog = {
+        "title": "Test POST Blog",
+        "author": "Matti",
+        "url": "https://example.com/blog1"
+    }
+
+    const response =   await api
+        .post('/api/blogs')
+        .send(newBlog) 
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+    assert.strictEqual(response.body.likes, 0)
+
 })
 
 after(async () => {
