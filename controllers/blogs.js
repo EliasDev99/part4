@@ -1,19 +1,28 @@
 const blogsRouter = require('express').Router()
-const { json } = require('express')
 const Blog = require('../models/blog.js')
-const { error } = require('../utils/logger.js')
+const User = require('../models/user.js')
 
 blogsRouter.get('/', async (_, response) => {
 
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user')
     response.json(blogs)
         
 })
 
 blogsRouter.post('/', async (request, response) => {
-    
-    const blog = new Blog(request.body)
+    const { title, author, url, likes } = request.body 
+
+    const user = await User.findOne()
+    if (!user) {
+        return response.status(400).json({ error: 'No users found in database'})
+    }
+
+    const blog = new Blog({ title, author, url, likes, user: user._id})
     const saveBlog = await blog.save()
+
+    // update user's blogs array
+    user.blogs = user.blogs.concat(saveBlog._id)
+    await user.save()
 
     response.status(201).json(saveBlog)
 })
